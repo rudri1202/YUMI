@@ -1,0 +1,626 @@
+/* ---------------- GLOBAL ---------------- */
+* {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1a1a1f, #0b0b0f);
+  color: #f2f2f5;
+}
+
+/* ---------------- APP ---------------- */
+.app {
+  max-width: 900px;
+  margin: auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+/* ---------------- LANGUAGE TOGGLE ---------------- */
+.language-toggle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.language-toggle button {
+  background: #2a2a33;
+  color: #bbb;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.language-toggle button.active {
+  background: linear-gradient(135deg, #ff8fcf, #9b7cff);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---------------- CHAT WINDOW ---------------- */
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+/* ---------------- MESSAGE BUBBLES ---------------- */
+.bubble {
+  max-width: 75%;
+  padding: 14px 16px;
+  border-radius: 18px;
+  line-height: 1.6;
+  font-size: 15px;
+  word-wrap: break-word;
+  animation: fadeInUp 0.25s ease-out;
+}
+
+/* Assistant bubble */
+.bubble.assistant {
+  align-self: flex-start;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 183, 213, 0.18),
+    rgba(201, 167, 255, 0.18)
+  );
+  color: #f5f5f5;
+  border-bottom-left-radius: 6px;
+  backdrop-filter: blur(6px);
+  white-space: pre-wrap;
+}
+
+.input-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid #1f1f2e;
+  background: #0f0f12;
+  transition: box-shadow 0.25s ease;
+}
+
+.input-bar.listening {
+  box-shadow: 0 -4px 16px rgba(255, 183, 213, 0.25);
+}
+
+.mic-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #2a2a3a;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mic-btn:hover {
+  background: #3a3a4a;
+}
+
+.mic-btn.active {
+  background: linear-gradient(135deg, #ffb7d5, #c9a7ff);
+  color: #000;
+  box-shadow: 0 0 12px rgba(255, 183, 213, 0.6);
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 183, 213, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(255, 183, 213, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 183, 213, 0);
+  }
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 22px;
+  border: none;
+  outline: none;
+  background: #1a1a24;
+  color: #fff;
+  font-size: 14px;
+}
+
+.chat-input::placeholder {
+  color: #888;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #0f0f12;
+  border-bottom: 1px solid #1f1f2e;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffb7d5, #c9a7ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.bot-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.bot-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.bot-subtitle {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.lang-capsule {
+  position: relative;
+  display: flex;
+  background: #1a1a24;
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.lang-option {
+  position: relative;
+  z-index: 2;
+  border: none;
+  background: transparent;
+  color: #aaa;
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.lang-option.active {
+  color: #000;
+  font-weight: 600;
+}
+
+.lang-indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  background: linear-gradient(135deg, #ffb7d5, #c9a7ff);
+  border-radius: 999px;
+  transition: transform 0.25s ease;
+}
+
+.lang-indicator.left {
+  transform: translateX(0);
+}
+
+.lang-indicator.right {
+  transform: translateX(100%);
+}
+
+.weather-pill {
+  margin: 10px auto 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eee;
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  backdrop-filter: blur(6px);
+}
+
+.weather-city {
+  font-weight: 600;
+}
+
+.weather-temp {
+  color: #ffb7d5;
+}
+
+.weather-sep {
+  opacity: 0.5;
+}
+
+.product-cards {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 4px;
+}
+
+.product-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 10px 12px;
+  min-width: 140px;
+  backdrop-filter: blur(6px);
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.product-links {
+  display: flex;
+  gap: 8px;
+}
+
+.product-links a {
+  font-size: 12px;
+  color: #ffb7d5;
+  text-decoration: none;
+}
+
+.product-cards-scroll {
+  overflow-x: auto;
+  padding: 6px 0;
+  margin-top: 10px;
+}
+
+/* Hide scrollbar (modern look) */
+.product-cards-scroll::-webkit-scrollbar {
+  display: none;
+}
+.product-cards-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.product-card.square {
+  width: 220px;        /* wider */
+  height: 120px;       /* shorter */
+  flex-shrink: 0;
+
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.speak-btn {
+  margin-top: 6px;
+  background: transparent;
+  border: none;
+  color: #f3a6c8;
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.speak-btn:hover {
+  opacity: 1;
+}
+
+.listen-icon {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  margin-top: 6px;
+  align-self: flex-start;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.listen-icon:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* Optional: only show on hover */
+.bot-message .listen-icon {
+  opacity: 0;
+}
+
+.bot-message:hover .listen-icon {
+  opacity: 0.6;
+}
+
+/* -----------------------------
+   Assistant bubble
+----------------------------- */
+.bubble.assistant {
+  position: relative;
+  background: linear-gradient(135deg, #2a1f2d, #1f1b26);
+  padding: 16px 44px 16px 18px;
+  border-radius: 18px;
+  margin: 12px 0;
+  max-width: 70%;
+  color: #f4f4f5;
+  line-height: 1.5;
+}
+
+/* Text inside bubble */
+.bot-text {
+  font-size: 14.5px;
+  white-space: pre-wrap;
+}
+
+/* -----------------------------
+   Subtle Listen Button
+----------------------------- */
+.listen-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  border-radius: 50%;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+/* Show button only on hover */
+.bubble.assistant:hover .listen-btn {
+  opacity: 1;
+}
+
+/* Hover effect */
+.listen-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: scale(1.05);
+}
+
+/* Active (click) feedback */
+.listen-btn:active {
+  transform: scale(0.95);
+}
+
+
+.product-card.square:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.product-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.product-links a {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 183, 213, 0.15);
+  color: #ffb7d5;
+  text-decoration: none;
+}
+
+
+
+.send-btn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: #8ab4f8;
+  color: #000;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+
+/* User bubble */
+.bubble.user {
+  align-self: flex-end;
+  background: #2b2b34;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border-bottom-right-radius: 6px;
+  text-align: left;
+}
+
+/* ---------------- PRODUCT CARD ---------------- */
+.card {
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card h4 {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* Links */
+.links {
+  margin-top: 8px;
+}
+
+.links a {
+  margin-right: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1f1f2a;
+  color: #ddd;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+/* ---------------- INPUT BAR ---------------- */
+.input-bar {
+  position: sticky;
+  bottom: 0;
+  padding: 12px;
+  background: rgba(10, 10, 14, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: none;
+  background: #1e1e26;
+  color: #fff;
+  font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px #ff8fcf;
+}
+
+/* Buttons */
+.input-bar button {
+  border: none;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff8fcf, #9b7cff);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ---------------- MIC LISTENING STATE ---------------- */
+.listening {
+  background: #1f1f2a;
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.listening span {
+  color: #ff8fcf;
+  animation: pulse 1.2s infinite;
+}
+
+/* ---------------- ANIMATIONS ---------------- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.thinking {
+  display: flex;
+  gap: 6px;
+  font-size: 22px;
+  opacity: 0.8;
+}
+
+.thinking .dot {
+  animation: blink 1.4s infinite both;
+}
+
+.thinking .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.thinking .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
