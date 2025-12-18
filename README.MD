@@ -1,221 +1,118 @@
-YUMI – Bilingual Weather-Aware Voice Assistant
+# YUMI – Weather-Aware Outing Assistant
 
-YUMI is a bilingual (Japanese & English) conversational assistant that helps users decide what essentials to carry when going out, based on real-time weather conditions.
-The project demonstrates the integration of LLMs, external APIs, voice interfaces, and a clean frontend–backend architecture.
+YUMI is a bilingual AI chatbot (English / Japanese) that helps users decide **what essentials to carry before heading out**, based on **current weather conditions**, **location**, and **contextual intent**.
 
-1. Core Idea
+The system combines real-time weather APIs, large language models, and speech interfaces to deliver a smooth, practical, and user-friendly experience.
 
-Users often check the weather before stepping out but still have to decide what to carry.
-YUMI bridges this gap by:
+---
 
-Understanding natural language (text or voice)
+## Problem Statement
 
-Fetching live weather data
+People often forget important items (umbrella, sunscreen, warm layers, etc.) because weather conditions change frequently and require context-based decisions.
 
-Generating practical, contextual suggestions
+YUMI solves this by:
 
-Supporting both Japanese and English users
+- Understanding natural language input
+- Fetching live weather data
+- Generating tailored recommendations
+- Communicating in a polite, friendly conversational style
 
-2. Tech Stack
-   Frontend
+---
 
-React (Vite) – UI and state management
+## Key Features
 
-Web Speech API
+- Weather-based essential item recommendations
+- Bilingual support: English and Japanese
+- Voice input using browser Speech-to-Text
+- Read-aloud responses using Text-to-Speech
+- LLM-powered contextual reasoning
+- Product suggestion cards with quick links  
+  (Amazon, Rakuten, Mercari, 7NOW)
+- Chat-style UI inspired by modern assistants
 
-SpeechRecognition → Speech-to-Text
+---
 
-SpeechSynthesis → Text-to-Speech (Read Aloud)
+## Tech Stack
 
-Custom CSS – ChatGPT-style chat UI (no UI framework)
+### Frontend
 
-Backend
+- React (Vite)
+- JavaScript
+- Custom CSS
+- Web Speech API (Speech-to-Text)
+- Web Speech Synthesis API (Text-to-Speech)
 
-FastAPI (Python) – REST API
+### Backend
 
-Open-Meteo API
+- Python
+- FastAPI
+- Uvicorn
+- Requests
 
-Geocoding API (city → coordinates)
+### AI & APIs
 
-Weather API (current weather)
+- Groq LLM API (LLaMA models)
+- Open-Meteo Weather API
+- Open-Meteo Geocoding API
 
-Groq LLM API
+---
 
-Natural language understanding
+## System Architecture
 
-Weather-aware response generation
+Frontend (React)
+|
+| REST API
+v
+Backend (FastAPI)
+|
+| Weather + Context
+v
+LLM (Groq)
 
-LLM
+---
 
-Groq-hosted LLaMA model
+## Application Flow
 
-Prompt-engineered for:
+1. User inputs text or voice
+2. Voice input is converted to text (if used)
+3. Backend determines location (language-aware logic)
+4. Weather data is fetched using Open-Meteo
+5. Weather + user query are sent to the LLM
+6. LLM generates:
+   - Friendly explanation
+   - List of essential items
+7. Frontend displays:
+   - Chat response
+   - Product cards
+   - Optional read-aloud audio
 
-Polite Japanese language norms
+---
 
-Emoji-free, friendly tone
+## Project Structure
 
-Longer, informative responses
+backend/
+├── main.py
+├── services/
+│ ├── llm.py
+│ └── weather.py
+└── utils/
+└── prompt.py
 
-Structured JSON output
-
-3. High-Level Architecture
-   User
-   │
-   │ (Text / Voice)
-   ▼
-   Frontend (React)
-   │
-   │ POST /chat
-   ▼
-   Backend (FastAPI)
-   │
-   ├─ City extraction
-   ├─ Weather fetch (Open-Meteo)
-   ├─ Prompt construction
-   └─ LLM inference (Groq)
-   │
-   ▼
-   Frontend
-   │
-   ├─ Chat bubbles
-   ├─ Product cards
-   └─ Read-aloud (TTS)
-
-4. End-to-End Flow
-
-User types or speaks a message
-
-Language toggle determines Japanese or English
-
-City name is extracted from the query
-
-Weather data is fetched using Open-Meteo
-
-Weather context + user query are sent to the LLM
-
-LLM returns:
-
-A friendly, informative message
-
-A list of recommended essentials
-
-Frontend:
-
-Displays the response
-
-Shows product cards
-
-Allows optional read-aloud
-
-5. Frontend Architecture
-   Key Components
-   Component Responsibility
-   App.jsx Global state (messages, language)
-   Header.jsx Bot identity & language toggle
-   ChatWindow.jsx Message routing by role
-   UserMessage.jsx User message bubble
-   BotMessage.jsx Assistant bubble + read aloud
-   ChatInput.jsx Text input + microphone
-   ProductCards.jsx Recommended items
-   ThinkingBubble.jsx Loading indicator
-
-Voice features are handled entirely on the frontend to reduce latency and backend complexity.
-
-6. Backend Architecture
-   main.py
-
-API entry point
-
-CORS configuration
-
-/chat endpoint
-
-weather.py
-
-Calls Open-Meteo Geocoding and Weather APIs
-
-Returns structured weather data
-
-Fails gracefully for invalid locations
-
-llm.py
-
-Builds prompts
-
-Calls Groq LLM
-
-Ensures structured JSON output
-
-prompt.py
-
-Centralized system prompt
-
-Controls tone, language, verbosity
-
-Enforces emoji-free responses
-
-7. Voice Design
-   Speech-to-Text
-
-Browser-native Web Speech API
-
-Supports ja-JP and en-US
-
-Voice input fills text box (user confirms before sending)
-
-Text-to-Speech
-
-Browser-native SpeechSynthesis
-
-Language-aware voice selection
-
-Subtle speaker icon per assistant message
-
-8. Running the Project
-   Backend
-
-From the project root:
-
-uvicorn backend.main:app --reload
-
-Backend runs at:
-
-http://localhost:8000
-
-Swagger UI:
-
-http://localhost:8000/docs
-
-Frontend
-cd frontend
-npm install
-npm run dev
-
-Frontend runs at:
-
-http://localhost:5173
-
-9. Design Decisions
-
-Frontend-based voice handling → faster, no extra cost
-
-Prompt-driven logic → minimal hard-coded rules
-
-Stateless backend → simple and scalable
-
-No emojis → avoids rendering and TTS issues
-
-10. Conclusion
-
-This project demonstrates:
-
-Practical use of LLMs with external APIs
-
-Voice-enabled web interaction
-
-Clean separation of concerns
-
-Real-world, user-centric problem solving
-
-The architecture is intentionally simple, extensible, and focused on clarity and usefulness.
+src/
+├── components/
+├── services/
+├── utils/
+├── App.jsx
+└── style.css
+
+---
+
+## Running Locally
+
+### Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```

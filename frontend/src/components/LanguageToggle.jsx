@@ -9,7 +9,6 @@ export default function LanguageToggle({ language, setLanguage }) {
       >
         JP 日本語
       </button>
-
       <button
         className={language === "en" ? "active" : ""}
         onClick={() => setLanguage("en")}
