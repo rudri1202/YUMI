@@ -22,8 +22,6 @@ def get_client():
 
 # 🔹 1️⃣ CITY EXTRACTION USING LLM
 def extract_city_from_message(text: str, lang: str) -> str | None:
-    if lang == "ja" :
-        return "Tokyo"
     client = get_client()
 
     prompt = (
