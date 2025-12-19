@@ -1,9 +1,3 @@
-Got it — **you want the README in EXACTLY this Markdown format**, clean, readable, no YAML, no extras, just **copy-paste ready**.
-
-Below is a **complete `README.md`** in the **same structure and tone** you showed, with appropriate length and limited emojis.
-
----
-
 # YUMI – Weather-Aware Outing Assistant
 
 YUMI is a bilingual AI chatbot (English / Japanese) that helps users decide **what essentials to carry before heading out**, based on **current weather conditions**, **location**, and **contextual intent**.
